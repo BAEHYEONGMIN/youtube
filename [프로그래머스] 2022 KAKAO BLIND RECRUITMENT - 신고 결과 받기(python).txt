@@ -1,0 +1,22 @@
+def solution(id_list, report, k):
+    answer = []
+    member_num = len(id_list)
+    print(member_num)
+    report_list = [[0 for i in range(member_num)] for i in range(member_num)]
+    result = [0 for i in range(member_num)]
+    
+    member_set = {}
+    index = 0
+    for i in id_list:
+        member_set[i] = index
+        index +=1
+    
+    for i in report:
+        name = i.split(" ")
+        report_list[member_set[name[1]]][member_set[name[0]]] = 1
+    
+    for i in report_list:
+        if sum(i)>=k:
+            result = [a+b for a,b in zip(result,i)]
+    
+    return result

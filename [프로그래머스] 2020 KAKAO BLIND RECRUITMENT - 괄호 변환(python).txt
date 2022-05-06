@@ -1,0 +1,61 @@
+from collections import deque #좌측 아이템에 접근하기 편함
+
+def is_correct(s):
+    stack = []
+    _s = deque(s)
+    while(_s):
+        item = _s.popleft()
+        if stack:
+            item2 = stack.pop()
+            if item2 == "(" and item == ")":
+                pass
+            else:
+                stack.append(item2)
+                stack.append(item)
+        else:
+            stack.append(item)
+    if stack: return False
+    else: return True
+        
+def convert(p):
+    u = ''
+    v = ''
+    _p = deque(p)
+    if not(_p):
+        return ''
+    count = 0
+    while(True):
+        item = _p.popleft()
+        if item == "(":
+            count += 1
+        else:
+            count -= 1
+        u += item
+        if count == 0:
+            break
+    v = ''.join(_p)
+    
+    if is_correct(u):
+        u += convert(v)
+        return u
+    else:
+        new_str = ''
+        new_str = "(" + convert(v) + ")"
+        
+        for i in u[1:-1]:
+            if i =="(":
+                new_str += ")"
+            else: new_str += "("
+        return new_str
+    
+
+def solution(p):
+    answer = ''
+    
+    if len(p) == 0:
+        return ''
+    if is_correct(p):
+        return p
+    
+    
+    return convert(p)
