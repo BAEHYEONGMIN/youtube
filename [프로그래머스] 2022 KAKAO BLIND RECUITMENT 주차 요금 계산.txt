@@ -1,0 +1,31 @@
+def convert_to_min(s):
+    return int(s[:2])*60 + int(s[3:])
+
+def cal_fee(fees,n):
+    if fees[0]>n:
+        return fees[1]
+    else:
+        return (fees[1] + ((n-fees[0])/fees[2] if (n-fees[0])%fees[2]==0 else ((n-fees[0])//fees[2] +1))* fees[3])
+
+def solution(fees, records):
+    answer = []
+    new_records = []
+    for i in records:
+        new_records.append(i.split(" "))
+    
+    car_list = []
+    car_IN = {}
+    for i in new_records:
+        if i[1] not in car_IN:
+            car_list.append(i[1])
+            car_IN[i[1]] = -convert_to_min(i[0])
+        elif (i[1] in car_IN) and i[2] == "IN":
+            car_IN[i[1]] -= convert_to_min(i[0])
+        else:
+            car_IN[i[1]] += convert_to_min(i[0])
+    car_list.sort()
+    for i in car_list:
+        if car_IN[i] < 1:
+            car_IN[i] += (23*60+59)
+        answer.append(cal_fee(fees,car_IN[i]))
+    return answer

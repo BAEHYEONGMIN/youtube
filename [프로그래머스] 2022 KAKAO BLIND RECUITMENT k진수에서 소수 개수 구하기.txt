@@ -1,0 +1,26 @@
+def conver_to_k(n,k):
+    if k ==10:
+        return n
+    new_n = ''
+    while(n>0):
+        new_n += str(n%k)
+        n = n//k
+    new_n = new_n[::-1]
+    return new_n
+
+def is_prime_number(n):
+    if n ==1:
+        return 0
+    for i in range(2,int(n**(0.5))+1):
+        if n%i==0:
+            return 0
+    return 1
+
+def solution(n, k):
+    answer = 0
+    new_n = conver_to_k(n,k)
+    new_n_list = str(new_n).split("0")
+    for item in new_n_list:
+        if item:
+            answer += is_prime_number(int(item))
+    return answer
