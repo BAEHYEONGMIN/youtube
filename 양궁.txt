@@ -1,0 +1,36 @@
+def solution(n, info):
+    if info[0] == n:
+        return [-1]
+    answer = [0 for i in range(11)]
+    print(n, info)
+    count = n
+    score_board = [0 for i in range(11)]
+    for i in range(11):
+        if info[i] != 0:
+            score_board[i] = 1
+    _info = []
+    print("score_board", score_board)
+    for i in range(11):
+        _info.append([((10-i)*2 if score_board[i]==1 else (10-i))/ (info[i]+1),i,info[i]])
+    print(_info)
+    arrow=n
+    sorted_info = sorted(_info,reverse = True)
+    print(sorted_info)
+    
+    index = 0
+    while(arrow>0):
+        if sorted_info[index][2]+1 <= arrow:
+            answer[sorted_info[index][1]] = sorted_info[index][2]+1
+            arrow = arrow - sorted_info[index][2] -1
+        index += 1
+        print("횟수 :",index, _info, arrow)
+        if arrow==0:
+            return answer
+        if index>10:
+            break
+    print(arrow)
+    for i in range(11):
+        if answer[10-i]==0:
+            answer[10-i]=arrow
+            return(answer)
+    return [-1]

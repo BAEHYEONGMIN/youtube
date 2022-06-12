@@ -1,0 +1,89 @@
+import copy
+A_VIC = []
+B_VIC = []
+def IsAOver(board,a_pos,b_pos):
+    valid_A_next = []
+    if board[max(0,a_pos[0]-1)][a_pos[1]] == 1: #북쪽
+        valid_A_next.append([max(0,a_pos[0]-1),a_pos[1]])
+    if board[min(len(board)-1,a_pos[0]+1)][a_pos[1]] == 1: #남쪽
+        valid_A_next.append([min(len(board)-1,a_pos[0]+1),a_pos[1]])
+    if board[a_pos[0]][max(0,a_pos[1]-1)] == 1: #서쪽
+        valid_A_next.append([a_pos[0],max(0,a_pos[1]-1)])
+    if board[a_pos[0]][min(len(board[0])-1,a_pos[1]+1)] == 1: #동쪽
+        valid_A_next.append([a_pos[0],min(len(board[0])-1,a_pos[1]+1)])
+    while a_pos in valid_A_next:
+        valid_A_next.remove(a_pos)
+    if valid_A_next == []:
+        return False
+    else:
+        return valid_A_next
+    
+def IsBOver(board,a_pos,b_pos):
+    valid_B_next = []
+    if board[max(0,b_pos[0]-1)][b_pos[1]] == 1: #북쪽
+        valid_B_next.append([max(0,b_pos[0]-1),b_pos[1]])
+    if board[min(len(board)-1,b_pos[0]+1)][b_pos[1]] == 1: #남쪽
+        valid_B_next.append([min(len(board)-1,b_pos[0]+1),b_pos[1]])
+    if board[b_pos[0]][max(0,b_pos[1]-1)] == 1: #서쪽
+        valid_B_next.append([b_pos[0],max(0,b_pos[1]-1)])
+    if board[b_pos[0]][min(len(board[0])-1,b_pos[1]+1)] == 1: #동쪽
+        valid_B_next.append([b_pos[0],min(len(board[0])-1,b_pos[1]+1)])
+    while b_pos in valid_B_next:
+        valid_B_next.remove(b_pos)
+    if valid_B_next == []:
+        return False
+    else:
+        return valid_B_next
+
+def Game(board,a_pos,b_pos,now_turn,turn):
+    global A_VIC,B_VIC
+    if now_turn == 1:
+        print("A")
+        result = IsAOver(board,a_pos,b_pos)
+        if result == False:
+            B_VIC.append(turn)
+            print("B VICTORY", turn)
+        else:
+            if a_pos == b_pos:
+                A_VIC.append(turn+1)
+                return
+            for i in result:
+                copy_board = copy.deepcopy(board)
+                copy_board[a_pos[0]][a_pos[1]] = 0
+                print("==========")
+                for k in copy_board:
+                    print(k)
+                print(i,b_pos,turn+1)
+                Game(copy_board,i,b_pos,-now_turn,turn+1)
+    if now_turn == -1:
+        print("B")
+        result = IsBOver(board,a_pos,b_pos)
+        if result == False:
+            A_VIC.append(turn)
+            print("A VICTORY", turn)
+        else:
+            if a_pos == b_pos:
+                B_VIC.append(turn+1)
+                return
+            for i in result:
+                copy_board = copy.deepcopy(board)
+                copy_board[b_pos[0]][b_pos[1]] = 0
+                print("==========")
+                for k in copy_board:
+                    print(k)
+                print(a_pos,i,turn+1)
+                Game(copy_board,a_pos,i,-now_turn,turn+1)
+      
+
+def solution(board, aloc, bloc):
+    answer = -1
+    a_pos = aloc
+    b_pos = bloc
+    
+    now_turn = 1 # 1:A, -1:B
+    Game(board, a_pos, b_pos, now_turn,0)
+    if A_VIC == []:
+        return min(B_VIC)
+    if B_VIC == []:
+        return min(A_VIC)
+    return min(max(A_VIC),max(B_VIC))
